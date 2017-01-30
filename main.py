@@ -8,7 +8,6 @@
 # FEATURE LIST #
 
 # "calculate" mood from text (naive method)
-# report summary of analysis
 # read in text from command line
 # read in text from file
 # read in text from url
@@ -18,13 +17,72 @@
 
 # imports #
 
+import os
+import re
 
 # constants #
 
 VOWELS = "aeiou"
 
+DATA_SOURCE = 'subjectivity_clues/subjclueslen1-HLTEMNLP05.tff'
 
 # helper functions #
+
+def __get_match(pat, str, n=0):
+    '''
+    Given a regex pattern and an input string
+    returns the nth match found
+    
+    By default, n is 0
+    '''
+    
+    matches = re.findall(pat, str)
+    
+    if 0 <= n < len(matches):
+        
+        return matches[n]
+    
+    else:
+        
+        return None
+
+def __read_dataset():
+    '''
+    Reads in sentiment data from the Sentiment Lexicon
+    as a list of dictionaries
+
+    Raises RuntimeError if sentiment file does not exist
+    '''
+
+    if os.path.exists(DATA_SOURCE):
+
+        entries = []
+
+        with open(DATA_SOURCE) as f:
+            
+            for line in f:
+                
+                type_pat = r'type=(\w+)'
+                len_pat  = r'len=(\d+)'
+                word_pat = r'word\d+=(\w+)'
+                pos_pat  = r'pos\d+=(\w+)'
+                stemmed_pat = r'stemmed\d+=(\w)'
+                polarity_pat = r'priorpolarity=(\w+)'
+
+                type = ('type', __get_match(type_pat, line))
+                len  = ('len', __get_match(len_pat, line))
+                word = ('word', __get_match(word_pat, line))
+                pos  = ('pos', __get_match(pos_pat, line))
+                stemmed  = ('stemmed', __get_match(stemmed_pat, line))
+                polarity = ('polarity', __get_match(polarity_pat, line))
+
+                entries.append(dict([type, len, word, pos, stemmed, polarity]))
+
+        return entries
+
+    else:
+
+        raise RuntimeError('Cannot find data source at "{}"'.format(DATA_SOURCE))
 
 def num_vowels(s):
     '''
@@ -81,14 +139,6 @@ def num_words(s):
         counts[w] = counts.get(w, 0) + 1
     
     return counts
-
-def get_mood(s):
-    '''
-    Given an input string, this function returns a
-    mood (happy, sad, etc.) for the given text
-    '''
-
-    pass
 
 def get_mood(s):
     '''
