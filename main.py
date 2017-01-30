@@ -7,7 +7,6 @@
 
 # FEATURE LIST #
 
-# count words
 # "calculate" mood from text
 # report summary of analysis
 # read in text from command line
@@ -23,12 +22,15 @@
 
 VOWELS = "aeiou"
 
+
 # helper functions #
 
 def num_vowels(s):
     '''
     Given a string, returns a dict mapping each vowel
     to a count of number of occurrences
+
+    NOTE: This function is NOT case-sensitive
     '''
     
     counts = {}
@@ -46,6 +48,8 @@ def num_consonants(s):
     '''
     Given a string, returns a dict mapping each consonant
     to a count of number of occurrences
+
+    NOTE: This function is NOT case-sensitive
     '''
     
     counts = {}
@@ -63,9 +67,19 @@ def num_words(s):
     '''
     Given a string, returns a dict mapping each word
     to a count of number of occurrences
-    '''
     
-    pass
+    NOTE: This function is NOT case-sensitive
+    '''
+
+    counts = {}
+    
+    for w in s.split():
+
+        w = w.lower()
+
+        counts[w] = counts.get(w, 0) + 1
+    
+    return counts
 
 
 # main logic #
