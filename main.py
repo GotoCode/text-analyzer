@@ -146,7 +146,28 @@ def get_mood(s):
     associated with the content of this text
     '''
     
-    pass
+    # build a mapping between each word and its mood
+    raw_data = __read_dataset()
+    
+    sentiment_map = {d['word'] : d['polarity'] for d in raw_data}
+
+    scores = {'positive' : 0, 'negative' : 0, 'neutral' : 0}
+
+    # determine mood for each word in the input text
+    for word in s.split():
+        
+        if word in sentiment_map:
+            
+            polarity = sentiment_map[word]
+            scores[polarity] = scores.get(polarity, 0) + 1
+    
+    # return one of positive, negative, or neutral category
+    category, count = max(scores.items(), key = lambda (k, v) : v)
+
+    if count == 0:
+        category = 'neutral'
+
+    return category if category != 'both' else 'neutral'
 
 def report_summary(s):
     '''
