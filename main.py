@@ -7,14 +7,13 @@
 
 # FEATURE LIST #
 
-# count vowels
-# count consonants
 # count words
 # "calculate" mood from text
 # report summary of analysis
 # read in text from command line
 # read in text from file
 # read in text from url
+# refactor code for vowel and consonant counting
 
 
 # imports #
@@ -35,6 +34,8 @@ def num_vowels(s):
     counts = {}
 
     for ch in s:
+
+        ch = ch.lower()
         
         if ch.isalpha() and ch in VOWELS:
             counts[ch] = counts.get(ch, 0) + 1
@@ -47,7 +48,16 @@ def num_consonants(s):
     to a count of number of occurrences
     '''
     
-    pass
+    counts = {}
+    
+    for ch in s:
+
+        ch = ch.lower()
+
+        if ch.isalpha() and ch not in VOWELS:
+            counts[ch] = counts.get(ch, 0) + 1
+        
+    return counts
 
 def num_words(s):
     '''
