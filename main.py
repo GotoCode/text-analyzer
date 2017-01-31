@@ -7,24 +7,31 @@
 
 # FEATURE LIST #
 
-# "calculate" mood from text (naive method)
 # read in text from command line
 # read in text from file
 # read in text from url
 # refactor code for vowel and consonant counting
+# report longest and shortest word
 # support for graphing frequencies via matplotlib
+# add support for adaptive (non hard-coded) display of output number 'widths'
+# remove extraneous formatting from input text (i.e. ! . ; ? etc.)
 
 
 # imports #
 
+from __future__ import print_function
+
+import sys
 import os
 import re
+
 
 # constants #
 
 VOWELS = "aeiou"
 
 DATA_SOURCE = 'subjectivity_clues/subjclueslen1-HLTEMNLP05.tff'
+
 
 # helper functions #
 
@@ -162,7 +169,7 @@ def get_mood(s):
             scores[polarity] = scores.get(polarity, 0) + 1
     
     # return one of positive, negative, or neutral category
-    category, count = max(scores.items(), key = lambda (k, v) : v)
+    category, count = max(scores.items(), key = lambda kv : kv[1])
 
     if count == 0:
         category = 'neutral'
@@ -184,13 +191,48 @@ def report_summary(s):
 
     return (vowel_counts, consonant_counts, word_counts, mood)
 
+def __print_summary(v_counts, c_counts, w_counts, mood):
+    '''
+    Prints the summary stats obtained as params
+    via a call to the report_summary function
+    '''
+
+    print()
+    
+    # render output of analysis to the terminal
+    print('This text contains {} vowels'.format(len(v_counts)))
+    print('This text contains {} consonants'.format(len(c_counts)), end='\n\n')
+
+    # each character with its count (sorted by character)
+    v_counts.update(c_counts)
+
+    for ch, count in sorted(v_counts.items()):
+        print('{} : {:3d}'.format(ch, count))
+
+    print()
+
+    # each word with its count (sorted by frequency)
+    for word, count in sorted(w_counts.items(), key = lambda wc : wc[1]):
+        print('{:10s} : {:3d}'.format(word, count))
+
+    print()
+
+    # output the predicted "mood" for the text
+    print('This text has a "{}" mood'.format(mood), end='\n\n')
+
 
 # main logic #
 
 def main():
     
-    pass
+    # read in string directly from command line
+    if len(sys.argv) == 2:
+        
+        s = sys.argv[1]
 
+        info = report_summary(s)
+
+        __print_summary(*info)
 
 # boilerplate code #
 
