@@ -7,14 +7,21 @@
 
 # FEATURE LIST #
 
-# read in text from command line
-# read in text from file
 # read in text from url
+# improve code for argument parsing to use "argparse" module
 # refactor code for vowel and consonant counting
 # report longest and shortest word
 # support for graphing frequencies via matplotlib
 # add support for adaptive (non hard-coded) display of output number 'widths'
 # remove extraneous formatting from input text (i.e. ! . ; ? etc.)
+# implement stemmer/lemmatizer to improve semantic analysis algorithm
+# add support for Unix file globs (i.e. *.txt)
+# add option to control output verbosity
+# separate code into different modules
+# fix bug causing issues between 'Happy => neutral' and 'happy => positive'
+# fix 'a nexus of pure evil' bug
+# add ability to read from multiple files and compile results into one summary
+# add ability to export analysis results to JSON
 
 
 # imports #
@@ -69,6 +76,7 @@ def __read_dataset():
             
             for line in f:
                 
+                # define patterns for each field in source file
                 type_pat = r'type=(\w+)'
                 len_pat  = r'len=(\d+)'
                 word_pat = r'word\d+=(\w+)'
@@ -76,6 +84,7 @@ def __read_dataset():
                 stemmed_pat = r'stemmed\d+=(\w)'
                 polarity_pat = r'priorpolarity=(\w+)'
 
+                # extract (key, value) pairs for each field in current line
                 type = ('type', __get_match(type_pat, line))
                 len  = ('len', __get_match(len_pat, line))
                 word = ('word', __get_match(word_pat, line))
@@ -83,6 +92,7 @@ def __read_dataset():
                 stemmed  = ('stemmed', __get_match(stemmed_pat, line))
                 polarity = ('polarity', __get_match(polarity_pat, line))
 
+                # add current row to list of data entries
                 entries.append(dict([type, len, word, pos, stemmed, polarity]))
 
         return entries
@@ -183,6 +193,7 @@ def report_summary(s):
     '''
 
     vowel_counts = num_vowels(s)
+
     consonant_counts = num_consonants(s)
 
     word_counts = num_words(s)
@@ -220,19 +231,55 @@ def __print_summary(v_counts, c_counts, w_counts, mood):
     # output the predicted "mood" for the text
     print('This text has a "{}" mood'.format(mood), end='\n\n')
 
+def __print_summary_from_string(s):
+    '''
+    Prints the summary statistics when
+    a user directly inputs text via the
+    command line
+    '''
+
+    info = report_summary(s)
+
+    __print_summary(*info)
+
+def __print_summary_from_file(filename):
+    '''
+    Prints the summary statistics
+    associated with the file located
+    at filename
+
+    NOTE - this function is very memory-intensive
+           as it loads the entire file into memory 
+           at once
+    '''
+    
+    with open(filename) as f:
+        
+        s = f.read()
+    
+    __print_summary_from_string(s)
 
 # main logic #
 
 def main():
-    
-    # read in string directly from command line
+
+    #print(sys.argv)
+
     if len(sys.argv) == 2:
-        
-        s = sys.argv[1]
 
-        info = report_summary(s)
+        arg = sys.argv[1]
 
-        __print_summary(*info)
+        # read in a (single) string directly from command line
+        if not os.path.exists(arg):
+
+            __print_summary_from_string(arg)
+
+        # read in text from a (single) file specified on command line
+        # WARNING - currently only handles .txt files
+        elif os.path.exists(arg):
+
+            __print_summary_from_file(arg)
+
 
 # boilerplate code #
 
