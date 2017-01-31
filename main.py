@@ -214,7 +214,7 @@ def __print_summary(v_counts, c_counts, w_counts, mood):
     print('This text contains {} vowels'.format(len(v_counts)))
     print('This text contains {} consonants'.format(len(c_counts)), end='\n\n')
 
-    # each character with its count (sorted by character)
+    # each character with its count (sorted in alphabetical order)
     v_counts.update(c_counts)
 
     for ch, count in sorted(v_counts.items()):
@@ -222,8 +222,8 @@ def __print_summary(v_counts, c_counts, w_counts, mood):
 
     print()
 
-    # each word with its count (sorted by frequency)
-    for word, count in sorted(w_counts.items(), key = lambda wc : wc[1]):
+    # each word with its count (sorted in descending order by frequency)
+    for word, count in sorted(w_counts.items(), key = lambda wc : wc[1], reverse=True):
         print('{:10s} : {:3d}'.format(word, count))
 
     print()
@@ -262,8 +262,6 @@ def __print_summary_from_file(filename):
 # main logic #
 
 def main():
-
-    #print(sys.argv)
 
     if len(sys.argv) == 2:
 
