@@ -28,6 +28,8 @@
 
 from __future__ import print_function
 
+import requests
+
 import sys
 import os
 import re
@@ -259,6 +261,25 @@ def __print_summary_from_file(filename):
     
     __print_summary_from_string(s)
 
+def __print_summary_from_url(url):
+    '''
+    Prints the summary statistics
+    obtained after analyzing the text
+    pointed to via the provided url
+    '''
+
+    try:
+        
+        r = requests.get(url)
+
+    except requests.exceptions.ConnectionError:
+
+        print('Invalid url: {}'.format(url))
+
+    else:
+        
+        __print_summary_from_string(r.content)
+
 # main logic #
 
 def main():
@@ -270,7 +291,19 @@ def main():
         # read in a (single) string directly from command line
         if not os.path.exists(arg):
 
-            __print_summary_from_string(arg)
+            # check if string is actually a url
+            if arg.startswith('http://') or arg.startswith('https://'):
+
+                __print_summary_from_url(arg)
+
+            elif arg.startswith('www.'):
+                
+                __print_summary_from_url('http://' + arg)
+                
+            # argument is a literal string entered via command line 
+            else:
+
+                __print_summary_from_string(arg)
 
         # read in text from a (single) file specified on command line
         # WARNING - currently only handles .txt files
