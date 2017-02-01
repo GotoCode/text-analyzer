@@ -7,9 +7,7 @@
 
 # FEATURE LIST #
 
-# read in text from url
 # improve code for argument parsing to use "argparse" module
-# refactor code for vowel and consonant counting
 # report longest and shortest word
 # support for graphing frequencies via matplotlib
 # add support for adaptive (non hard-coded) display of output number 'widths'
@@ -103,6 +101,27 @@ def __read_dataset():
 
         raise RuntimeError('Cannot find data source at "{}"'.format(DATA_SOURCE))
 
+def __build_counts(s, p=lambda x : True):
+    '''
+    Given a string s and a predicate p
+    builds up a dict mapping each char
+    in s to its count (if p(char) evaluates to True)
+
+    NOTE - p must be a function which takes a char
+           as input and produces a bool as output
+    '''
+
+    counts = {}
+
+    for ch in s:
+        
+        ch = ch.lower()
+
+        if p(ch):
+            counts[ch] = counts.get(ch, 0) + 1
+    
+    return counts
+
 def num_vowels(s):
     '''
     Given a string, returns a dict mapping each vowel
@@ -111,16 +130,7 @@ def num_vowels(s):
     NOTE: This function is NOT case-sensitive
     '''
     
-    counts = {}
-
-    for ch in s:
-
-        ch = ch.lower()
-        
-        if ch.isalpha() and ch in VOWELS:
-            counts[ch] = counts.get(ch, 0) + 1
-    
-    return counts
+    return __build_counts(s, lambda ch : ch.isalpha() and ch in VOWELS)
 
 def num_consonants(s):
     '''
@@ -129,17 +139,8 @@ def num_consonants(s):
 
     NOTE: This function is NOT case-sensitive
     '''
-    
-    counts = {}
-    
-    for ch in s:
 
-        ch = ch.lower()
-
-        if ch.isalpha() and ch not in VOWELS:
-            counts[ch] = counts.get(ch, 0) + 1
-        
-    return counts
+    return __build_counts(s, lambda ch : ch.isalpha() and ch not in VOWELS)
 
 def num_words(s):
     '''
