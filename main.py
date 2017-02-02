@@ -8,7 +8,6 @@
 # FEATURE LIST #
 
 # improve code for argument parsing to use "argparse" module
-# remove extraneous formatting from input text (i.e. ! . ; ? etc.)
 # implement stemmer/lemmatizer to improve semantic analysis algorithm
 # add support for Unix file globs (i.e. *.txt)
 # add option to control output verbosity
@@ -18,6 +17,7 @@
 # add ability to read from multiple files and compile results into one summary
 # add ability to export analysis results to JSON
 # add '--graph-words' or '--graph-chars' or '--graph' flag option
+# add support for "terminal graphing" mode
 
 
 # imports #
@@ -121,6 +121,19 @@ def __build_counts(s, p=lambda x : True):
     
     return counts
 
+def __remove_extra(s):
+    '''
+    Removes trailing non-alphabetic characters from s
+    '''
+
+    i = len(s)
+
+    while i > 0 and not s[i - 1].isalpha():
+        
+        i = i - 1
+
+    return s[:i]
+    
 def num_vowels(s):
     '''
     Given a string, returns a dict mapping each vowel
@@ -153,7 +166,7 @@ def num_words(s):
     
     for w in s.split():
 
-        w = w.lower()
+        w = __remove_extra(w.lower())
 
         counts[w] = counts.get(w, 0) + 1
     
@@ -174,7 +187,9 @@ def get_mood(s):
 
     # determine mood for each word in the input text
     for word in s.split():
-        
+
+        word = __remove_extra(word.lower())
+
         if word in sentiment_map:
             
             polarity = sentiment_map[word]
