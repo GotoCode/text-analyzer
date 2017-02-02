@@ -8,12 +8,10 @@
 # FEATURE LIST #
 
 # improve code for argument parsing to use "argparse" module
-# implement stemmer/lemmatizer to improve semantic analysis algorithm
+# implement stemmer/lemmatizer
 # add support for Unix file globs (i.e. *.txt)
 # add option to control output verbosity
 # separate code into different modules
-# fix bug causing issues between 'Happy => neutral' and 'happy => positive'
-# fix 'a nexus of pure evil' bug
 # add ability to read from multiple files and compile results into one summary
 # add ability to export analysis results to JSON
 # add '--graph-words' or '--graph-chars' or '--graph' flag option
@@ -198,7 +196,7 @@ def get_mood(s):
     # return one of positive, negative, or neutral category
     category, count = max(scores.items(), key = lambda kv : kv[1])
 
-    if count == 0:
+    if count == 0 or scores['positive'] == scores['negative']:
         category = 'neutral'
 
     return category if category != 'both' else 'neutral'
