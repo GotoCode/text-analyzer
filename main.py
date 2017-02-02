@@ -8,7 +8,6 @@
 # FEATURE LIST #
 
 # improve code for argument parsing to use "argparse" module
-# add support for adaptive (non hard-coded) display of output number 'widths'
 # remove extraneous formatting from input text (i.e. ! . ; ? etc.)
 # implement stemmer/lemmatizer to improve semantic analysis algorithm
 # add support for Unix file globs (i.e. *.txt)
@@ -220,14 +219,25 @@ def __print_summary(v_counts, c_counts, w_counts, mood):
     # each character with its count (sorted in alphabetical order)
     v_counts.update(c_counts)
 
+    # values for clean output display
+    max_count = max(v_counts.values())
+
+    fmt_str = '{} : {:' + str(len(str(max_count)) + 1) + 'd}'
+
     for ch, count in sorted(v_counts.items()):
-        print('{} : {:3d}'.format(ch, count))
+        print(fmt_str.format(ch, count))
+
+    # values for clean display of output
+    max_count = max(w_counts.values())
+    longest_word = max(w_counts.keys(), key=lambda x : len(x))
+
+    fmt_str = '{:' + str(len(longest_word) + 1) + 's} : {:' + str(len(str(max_count)) + 1) + '}'
 
     print()
 
     # each word with its count (sorted in descending order by frequency)
     for word, count in sorted(w_counts.items(), key = lambda wc : wc[1], reverse=True):
-        print('{:10s} : {:3d}'.format(word, count))
+        print(fmt_str.format(word, count))
 
     print()
 
