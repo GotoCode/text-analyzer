@@ -7,8 +7,6 @@
 
 # FEATURE LIST #
 
-# improve code for argument parsing to use "argparse" module
-# implement stemmer/lemmatizer
 # add support for Unix file globs (i.e. *.txt)
 # add option to control output verbosity
 # separate code into different modules
@@ -25,6 +23,7 @@ from __future__ import print_function
 import requests
 import matplotlib.pyplot as plt
 
+import argparse
 import sys
 import os
 import re
@@ -222,8 +221,6 @@ def __print_summary(v_counts, c_counts, w_counts, mood):
     Prints the summary stats obtained as params
     via a call to the report_summary function
     '''
-
-    print()
     
     # render output of analysis to the terminal
     print('This text contains {} vowels'.format(len(v_counts)))
@@ -278,12 +275,20 @@ def __print_summary_from_file(filename):
            as it loads the entire file into memory 
            at once
     '''
-    
-    with open(filename) as f:
+
+    print('Summary for file : "{}"'.format(filename), end='\n\n')
+
+    if not os.path.exists(filename):
+
+        print('Cannot find file : {}'.format(filename))
+
+    else:
+
+        with open(filename) as f:
         
-        s = f.read()
+            s = f.read()
     
-    __print_summary_from_string(s)
+            __print_summary_from_string(s)
 
 def __print_summary_from_url(url):
     '''
@@ -291,6 +296,8 @@ def __print_summary_from_url(url):
     obtained after analyzing the text
     pointed to via the provided url
     '''
+
+    print('Summary for text at : "{}"'.format(url), end='\n\n')
 
     try:
         
@@ -363,33 +370,34 @@ def __graph_words(info):
 
 def main():
 
-    if len(sys.argv) == 2:
+    # parse arguments from command line (list of strings, list of filenames, list of urls)
 
-        arg = sys.argv[1]
+    parser = argparse.ArgumentParser(prog='Text Analyzer', 
+                                     description='Analyze & compute basic stats for given corpus of text')
+    
+    # create attributes to hold list of strings, files, and urls
+    parser.add_argument('-f', '--file', nargs='*', dest='file_list', default=[])
+    parser.add_argument('-s', '--str',  nargs='*', dest='str_list',  default=[])
+    parser.add_argument('-u', '--url',  nargs='*', dest='url_list',  default=[])
+    
+    ns = parser.parse_args()
 
-        # read in a (single) string directly from command line
-        if not os.path.exists(arg):
+    # process each string in turn
+    for s in ns.str_list:
+        
+        print('Summary for string : "{}"'.format(s), end='\n\n')
 
-            # check if string is actually a url
-            if arg.startswith('http://') or arg.startswith('https://'):
+        __print_summary_from_string(s)
+    
+    # process each file as given by list of filenames
+    for filename in ns.file_list:
+        
+        __print_summary_from_file(filename)
 
-                __print_summary_from_url(arg)
-
-            elif arg.startswith('www.'):
-                
-                __print_summary_from_url('http://' + arg)
-                
-            # argument is a literal string entered via command line 
-            else:
-
-                __print_summary_from_string(arg)
-
-        # read in text from a (single) file specified on command line
-        # WARNING - currently only handles .txt files
-        elif os.path.exists(arg):
-
-            __print_summary_from_file(arg)
-
+    # retrieve data from each url and analyze text
+    for url in ns.url_list:
+        
+        __print_summary_from_url(url)
 
 # boilerplate code #
 
