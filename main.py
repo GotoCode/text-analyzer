@@ -27,6 +27,7 @@ import argparse
 import sys
 import os
 import re
+import glob
 
 
 # constants #
@@ -372,30 +373,36 @@ def main():
 
     # parse arguments from command line (list of strings, list of filenames, list of urls)
 
-    parser = argparse.ArgumentParser(prog='Text Analyzer', 
-                                     description='Analyze & compute basic stats for given corpus of text')
+    parser = argparse.ArgumentParser(description='Analyze & compute basic stats for given corpus of text')
     
     # create attributes to hold list of strings, files, and urls
-    parser.add_argument('-f', '--file', nargs='*', dest='file_list', default=[])
-    parser.add_argument('-s', '--str',  nargs='*', dest='str_list',  default=[])
-    parser.add_argument('-u', '--url',  nargs='*', dest='url_list',  default=[])
+    parser.add_argument('-f', nargs='*', default=[])
+    parser.add_argument('-s', nargs='*',  default=[])
+    parser.add_argument('-u', nargs='*',  default=[])
     
     ns = parser.parse_args()
 
     # process each string in turn
-    for s in ns.str_list:
+    for str in ns.s:
         
         print('Summary for string : "{}"'.format(s), end='\n\n')
-
+    
         __print_summary_from_string(s)
     
+    # expand any unix wildcards specified in list of path names
+    path_list = []
+    
+    for path in ns.f:
+        
+        path_list.extend(glob.glob(path))
+        
     # process each file as given by list of filenames
-    for filename in ns.file_list:
+    for filename in path_list:
         
         __print_summary_from_file(filename)
 
     # retrieve data from each url and analyze text
-    for url in ns.url_list:
+    for url in ns.u:
         
         __print_summary_from_url(url)
 
