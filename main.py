@@ -7,12 +7,9 @@
 
 # FEATURE LIST #
 
-# add support for Unix file globs (i.e. *.txt)
 # add option to control output verbosity
 # separate code into different modules
-# add ability to read from multiple files and compile results into one summary
 # add ability to export analysis results to JSON
-# add '--graph-words' or '--graph-chars' or '--graph' flag option
 # add support for "terminal graphing" mode
 
 
@@ -24,7 +21,6 @@ import requests
 import matplotlib.pyplot as plt
 
 import argparse
-import sys
 import os
 import re
 import glob
@@ -379,8 +375,10 @@ def main():
     parser.add_argument('-f', nargs='*', default=[])
     parser.add_argument('-s', nargs='*',  default=[])
     parser.add_argument('-u', nargs='*',  default=[])
-    
+
     ns = parser.parse_args()
+
+    print('ns:', ns) # dummy code
 
     # process each string in turn
     for str in ns.s:
@@ -405,7 +403,8 @@ def main():
     for url in ns.u:
         
         __print_summary_from_url(url)
-
+    
+    
 # boilerplate code #
 
 if __name__ == '__main__':
