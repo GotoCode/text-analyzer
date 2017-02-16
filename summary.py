@@ -11,6 +11,8 @@
 
 from __future__ import print_function
 
+import json
+
 import requests
 
 from stats import *
@@ -18,7 +20,7 @@ from stats import *
 
 # functions #
 
-def print_summary(v_counts, c_counts, w_counts, mood, verbosity=0, json_mode=False):
+def print_summary(v_counts, c_counts, w_counts, mood, verbosity=0):
     '''
     Prints the summary stats obtained as params
     via a call to the report_summary function
@@ -73,11 +75,22 @@ def print_summary_from_string(s, verbosity=0, json_mode=False):
     command line
     '''
 
-    v, c, w, m = report_summary(s)
+    # JSON output display mode
+    if json_mode:
 
-    print('Summary for string : "{}"'.format(s), end='\n\n')
+        info_dict = report_json_summary(s)
 
-    print_summary(v, c, w, m, verbosity)
+        info_dict['name'] = s
+
+        print(json.dumps(info_dict), end='\n\n')
+
+    else:
+
+        v, c, w, m = report_summary(s)
+
+        print('Summary for string : "{}"'.format(s), end='\n\n')
+
+        print_summary(v, c, w, m, verbosity)
 
 def print_summary_from_file(filename, verbosity=0, json_mode=False):
     '''
@@ -90,19 +103,32 @@ def print_summary_from_file(filename, verbosity=0, json_mode=False):
            at once
     '''
 
-    print('Summary for file : "{}"'.format(filename), end='\n\n')
+    # JSON output display mode
+    if json_mode:
 
-    if not os.path.exists(filename):
+        with open(filename) as f:
 
-        print('Cannot find file : {}'.format(filename))
+            info_dict = report_json_summary(f.read())
+
+            info_dict['name'] = filename
+
+            print(json.dumps(info_dict), end='\n\n')
 
     else:
 
-        with open(filename) as f:
+        print('Summary for file : "{}"'.format(filename), end='\n\n')
+
+        if not os.path.exists(filename):
+
+            print('Cannot find file : {}'.format(filename))
+
+        else:
+
+            with open(filename) as f:
         
-            s = f.read()
+                s = f.read()
     
-            print_summary_from_string(s, verbosity)
+                print_summary_from_string(s, verbosity)
 
 def print_summary_from_url(url, verbosity, json_mode=False):
     '''
@@ -111,16 +137,29 @@ def print_summary_from_url(url, verbosity, json_mode=False):
     pointed to via the provided url
     '''
 
-    print('Summary for text at : "{}"'.format(url), end='\n\n')
-
-    try:
+    # JSON output display mode
+    if json_mode:
         
         r = requests.get(url)
-
-    except requests.exceptions.ConnectionError:
-
-        print('Invalid url: {}'.format(url))
-
-    else:
         
-        print_summary_from_string(r.content, verbosity)
+        info_dict = report_json_summary(r.content)
+        
+        info_dict['name'] = url
+
+        print(json.dumps(info_dict), end='\n\n')
+        
+    else:
+
+        print('Summary for text at : "{}"'.format(url), end='\n\n')
+
+        try:
+        
+            r = requests.get(url)
+
+        except requests.exceptions.ConnectionError:
+
+            print('Invalid url: {}'.format(url))
+
+        else:
+        
+            print_summary_from_string(r.content, verbosity)

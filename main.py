@@ -5,7 +5,6 @@
 
 # FEATURE LIST #
 
-# add ability to export analysis results to JSON
 # add docstrings to function definitions
 # add help-strings for each command line argument
 

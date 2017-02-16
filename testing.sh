@@ -5,3 +5,6 @@ python main.py -s "this is a test of verbosity"
 python main.py -s "this is a test of verbosity" -v
 python main.py -s "this is a test of verbosity" -vv
 python main.py -s "this is a test of verbosity" -vvv
+python main.py -s "this is a test of JSON" --json
+python main.py -f test.txt --json
+python main.py -u 'https://news.ycombinator.com' --json
