@@ -133,3 +133,24 @@ def report_summary(s):
     mood = get_mood(s)
 
     return (vowel_counts, consonant_counts, word_counts, mood)
+
+
+def report_json_summary(s):
+    '''
+    returns a dictionary representation of various
+    summary stats after analyzing the given piece of text
+    '''
+    
+    info_dict = {}
+
+    info_dict['vowel_count'] = num_vowels(s)
+
+    info_dict['consonant_count'] = num_consonants(s)
+
+    info_dict['word_count'] = num_words(s)
+
+    info_dict['mood'] = get_mood(s)
+
+    info_dict['content'] = s
+
+    return info_dict

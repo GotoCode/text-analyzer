@@ -18,17 +18,21 @@ from stats import *
 
 # functions #
 
-def print_summary(v_counts, c_counts, w_counts, mood):
+def print_summary(v_counts, c_counts, w_counts, mood, verbosity=0, json_mode=False):
     '''
     Prints the summary stats obtained as params
     via a call to the report_summary function
-    '''
-    
-    # render output of analysis to the terminal
-    print('This text contains {} vowels'.format(len(v_counts)))
-    print('This text contains {} consonants'.format(len(c_counts)), end='\n\n')
 
-    # each character with its count (sorted in alphabetical order)
+    verbosity level == 0 : display word counts...
+    verbosity level == 1 : ...and display mood for text...
+    verbosity level >= 2 : ...and display character counts
+    '''
+        
+    if verbosity >= 2:
+        # render output of analysis to the terminal
+        print('This text contains {} vowels'.format(len(v_counts)))
+        print('This text contains {} consonants'.format(len(c_counts)), end='\n\n')
+
     v_counts.update(c_counts)
 
     # values for clean output display
@@ -36,8 +40,12 @@ def print_summary(v_counts, c_counts, w_counts, mood):
 
     fmt_str = '{} : {:' + str(len(str(max_count)) + 1) + 'd}'
 
-    for ch, count in sorted(v_counts.items()):
-        print(fmt_str.format(ch, count))
+    if verbosity >= 2:
+        # each character with its count (sorted in alphabetical order)
+        for ch, count in sorted(v_counts.items()):
+            print(fmt_str.format(ch, count))
+        
+        print()
 
     # values for clean display of output
     max_count = max(w_counts.values())
@@ -45,29 +53,33 @@ def print_summary(v_counts, c_counts, w_counts, mood):
 
     fmt_str = '{:' + str(len(longest_word) + 1) + 's} : {:' + str(len(str(max_count)) + 1) + '}'
 
-    print()
+    if verbosity >= 0:
 
-    # each word with its count (sorted in descending order by frequency)
-    for word, count in sorted(w_counts.items(), key = lambda wc : wc[1], reverse=True):
-        print(fmt_str.format(word, count))
+        # each word with its count (sorted in descending order by frequency)
+        for word, count in sorted(w_counts.items(), key = lambda wc : wc[1], reverse=True):
+            print(fmt_str.format(word, count))
 
-    print()
+        print()
 
-    # output the predicted "mood" for the text
-    print('This text has a "{}" mood'.format(mood), end='\n\n')
+    if verbosity >= 1:
+    
+        # output the predicted "mood" for the text
+        print('This text has a "{}" mood'.format(mood), end='\n\n')
 
-def print_summary_from_string(s):
+def print_summary_from_string(s, verbosity=0, json_mode=False):
     '''
     Prints the summary statistics when
     a user directly inputs text via the
     command line
     '''
 
-    info = report_summary(s)
+    v, c, w, m = report_summary(s)
 
-    print_summary(*info)
+    print('Summary for string : "{}"'.format(s), end='\n\n')
 
-def print_summary_from_file(filename):
+    print_summary(v, c, w, m, verbosity)
+
+def print_summary_from_file(filename, verbosity=0, json_mode=False):
     '''
     Prints the summary statistics
     associated with the file located
@@ -90,9 +102,9 @@ def print_summary_from_file(filename):
         
             s = f.read()
     
-            print_summary_from_string(s)
+            print_summary_from_string(s, verbosity)
 
-def print_summary_from_url(url):
+def print_summary_from_url(url, verbosity, json_mode=False):
     '''
     Prints the summary statistics
     obtained after analyzing the text
@@ -111,4 +123,4 @@ def print_summary_from_url(url):
 
     else:
         
-        print_summary_from_string(r.content)
+        print_summary_from_string(r.content, verbosity)
