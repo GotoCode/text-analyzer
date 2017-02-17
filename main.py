@@ -1,12 +1,13 @@
-# 
-# main logic for text analyzer program
+#
+# main.py
+#  
+# main logic for the text analyzer program
 # 
 
 
 # FEATURE LIST #
 
 # add docstrings to function definitions
-# add help-strings for each command line argument
 
 
 # imports #

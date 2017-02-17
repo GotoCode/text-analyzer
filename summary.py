@@ -22,8 +22,10 @@ from stats import *
 
 def print_summary(v_counts, c_counts, w_counts, mood, verbosity=0):
     '''
-    Prints the summary stats obtained as params
-    via a call to the report_summary function
+    Formats and prints the summary stats for 
+    a given piece of text, based on arguments
+    which can be obtained via a call to the 
+    report_summary function
 
     verbosity level == 0 : display word counts...
     verbosity level == 1 : ...and display mood for text...
@@ -70,9 +72,8 @@ def print_summary(v_counts, c_counts, w_counts, mood, verbosity=0):
 
 def print_summary_from_string(s, verbosity=0, json_mode=False):
     '''
-    Prints the summary statistics when
-    a user directly inputs text via the
-    command line
+    Prints the summary statistics given
+    only the input string itself
     '''
 
     # JSON output display mode
@@ -95,12 +96,11 @@ def print_summary_from_string(s, verbosity=0, json_mode=False):
 def print_summary_from_file(filename, verbosity=0, json_mode=False):
     '''
     Prints the summary statistics
-    associated with the file located
-    at filename
+    for the file located at <filename>
 
     NOTE - this function is very memory-intensive
-           as it loads the entire file into memory 
-           at once
+           since it loads the entire file into memory 
+           at once, use with caution
     '''
 
     # JSON output display mode
@@ -134,7 +134,7 @@ def print_summary_from_url(url, verbosity, json_mode=False):
     '''
     Prints the summary statistics
     obtained after analyzing the text
-    pointed to via the provided url
+    located at the provided url
     '''
 
     # JSON output display mode

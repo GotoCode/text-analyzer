@@ -7,12 +7,20 @@
 # defined in stats.py
 # 
 
+# imports #
+
+from matplotlib import pyplot as plt
+
+
+# functions #
+
 def __graph_chars(info):
     '''
-    Given a tuple of summary stats
-    such as that returned by report_summary
-    this function plots character frequency 
-    data via matplotlib
+    Given a tuple of summary stats,
+    such as that returned by the 
+    report_summary function, this 
+    function plots character 
+    frequency data using matplotlib
     '''
 
     # retrieve info from summary tuple

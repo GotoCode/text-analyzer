@@ -2,9 +2,9 @@
 # data.py
 #
 # This file contains code to read 
-# in sentiment data (from sentiment analysis)
+# in sentiment data (for sentiment analysis)
 # from the data source specified by the 
-# DATA_SOURCE constant 
+# DATA_SOURCE constant
 #
 
 # imports #
@@ -40,10 +40,20 @@ def __get_match(pat, str, n=0):
 
 def read_dataset():
     '''
-    Reads in sentiment data from the Sentiment Lexicon
-    as a list of dictionaries
+    Reads in sentiment data from the file specified
+    by the DATA_SOURCE constant, returning it as a 
+    list of dictionaries
 
     Raises RuntimeError if sentiment file does not exist
+
+    Each entry in the list is a dictionary with the following fields:
+
+    - word : the English word associated with this entry
+    - type : the type of subject this word represents {weaksubj, strongsubj}
+    - len  : UNUSED 
+    - pos  : Part-of-Speech for this particular word {adj, noun, verb, anypos, adverb}
+    - stemmed  : is this the most basic (stemmed) form of the word?
+    - polarity : sentiment associated with this word {positive, neutral, negaative}
     '''
 
     if os.path.exists(DATA_SOURCE):

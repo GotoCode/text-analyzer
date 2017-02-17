@@ -1,4 +1,6 @@
 # 
+# stats.py
+# 
 # This file contains code to help compute
 # various basic stats for a given piece of text
 # 
@@ -17,7 +19,7 @@ VOWELS = "aeiou"
 
 def __remove_extra(s):
     '''
-    Removes trailing non-alphabetic characters from s
+    Removes trailing non-alphabetic characters (,!?;:) from s
     '''
 
     i = len(s)
@@ -54,7 +56,11 @@ def num_vowels(s):
     Given a string, returns a dict mapping each vowel
     to a count of number of occurrences
 
-    NOTE: This function is NOT case-sensitive
+    NOTE: This function is case-insensitive
+
+    NOTE 2: If a vowel does not exist in the 
+            input string, it is absent from
+            the keys of the output dict
     '''
     
     return __build_counts(s, lambda ch : ch.isalpha() and ch in VOWELS)
@@ -64,7 +70,11 @@ def num_consonants(s):
     Given a string, returns a dict mapping each consonant
     to a count of number of occurrences
 
-    NOTE: This function is NOT case-sensitive
+    NOTE: This function is case-insensitive
+
+    NOTE 2: If a consonant does not exist in
+            the input string, it will be absent
+            from the keys of the output dict
     '''
 
     return __build_counts(s, lambda ch : ch.isalpha() and ch not in VOWELS)
@@ -137,8 +147,17 @@ def report_summary(s):
 
 def report_json_summary(s):
     '''
-    returns a dictionary representation of various
-    summary stats after analyzing the given piece of text
+    returns a python dictionary containing 
+    various summary stats after analyzing 
+    the given input string
+
+    The keys of this dictionary are defined as follows:
+
+    - vowel_count : a dictionary mapping vowels to number of occurrences
+    - consonant_count : a dictionary mapping consonants to number of occurrences
+    - word_count : a dictionary mapping words to number of occurences
+    - mood : a string representing the "mood" of the entire text {positive, neutral, negative}
+    - content : the content of the input string itself
     '''
     
     info_dict = {}
