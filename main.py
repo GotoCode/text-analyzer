@@ -33,18 +33,18 @@ def main():
     v_level = 0
 
     # parse arguments from command line (list of strings, list of filenames, list of urls)
-    parser = argparse.ArgumentParser(description='Analyze & compute basic stats for given corpus of text')
+    parser = argparse.ArgumentParser(description='analyze & compute basic stats for given corpus of text')
     
     # create attributes to hold list of strings, files, and urls
-    parser.add_argument('-f', nargs='*', default=[])
-    parser.add_argument('-s', nargs='*',  default=[])
-    parser.add_argument('-u', nargs='*',  default=[])
+    parser.add_argument('-f', nargs='*', default=[], help='specify a list of local files to analyze')
+    parser.add_argument('-s', nargs='*', default=[], help='specify a list of strings to analyze directly')
+    parser.add_argument('-u', nargs='*', default=[], help='specify a list of urls to analyze text from webpages')
 
     # add argument for output verbosity levels
-    parser.add_argument('-v', action='count', default=0)
+    parser.add_argument('-v', action='count', default=0, help='specify verbosity level -v -vv -vvv etc.')
 
     # add argument for JSON output option
-    parser.add_argument('--json', action='store_true')
+    parser.add_argument('--json', action='store_true', help='enable JSON output mode')
     
     ns = parser.parse_args()
     
