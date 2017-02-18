@@ -5,19 +5,9 @@
 # 
 
 
-# FEATURE LIST #
-
-# add docstrings to function definitions
-
-
 # imports #
 
-from __future__ import print_function
-
-import matplotlib.pyplot as plt
-
 import argparse
-import os
 import glob
 
 from stats import *
