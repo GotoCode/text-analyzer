@@ -8,7 +8,7 @@
 
 ---
 
-#### Python
+### Python
 
 This project is compatible with _both_ __Python 2.x__ and __Python 3.x__, so you need to first install one of these versions of the Python interpreter.
 
@@ -28,7 +28,7 @@ To check if __Python 3.x__ is installed, follow the same instructions as above, 
 
 If you see something like ``python 3.6.0``, then you're ready to continue with the rest of the installation.
 
-#### Requests
+### Requests
 
 In order to support text analysis on webpages, this project makes use of the the [Requests](http://docs.python-requests.org/en/master/) library.
 
@@ -36,7 +36,7 @@ To install the Requests library, type in the following in your console / command
 
     pip install requests
 
-#### Matplotlib (Optional)
+### Matplotlib (Optional)
 
 If you would like to use the included ``graph.py`` as a library, you need to install matplotlib as follows:
 
@@ -66,20 +66,14 @@ After completing the above steps, you should be ready to run the program, as spe
 
 ## Built With
 
----
-
 * Python - https://www.python.org
 * Requests - http://docs.python-requests.org/en/master/
 * Matplotlib - http://www.matplotlib.org
 
 ## Author
 
----
-
 * **Syed Peer**
 
 ## Acknowledgments
-
----
 
 * Thanks to [Kenneth Reitz](https://github.com/kennethreitz) for the [Requests](http://docs.python-requests.org/en/master/) library
